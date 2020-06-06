@@ -1,7 +1,7 @@
-{ pkgs, cfg }:
+{ pkgs, cfg, lib }:
 
 let
-  dag = import <home-manager/modules/lib/dag.nix> { inherit (pkgs) lib; };
+  dag = import <home-manager/modules/lib/dag.nix> { inherit lib; };
   activation = with dag; txt: dagEntryAfter ["installPackages"] txt;
 
   engineConfigs = {

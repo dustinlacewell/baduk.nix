@@ -1,4 +1,4 @@
-{ pkgs, cfg }:
+{ pkgs, cfg, lib }:
 
 pkgs.appimageTools.wrapType2 rec {
   name = "sabaki-${cfg.version}";

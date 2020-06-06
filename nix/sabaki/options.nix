@@ -1,6 +1,6 @@
-{ pkgs, cfg }:
+{ pkgs, cfg, lib }:
 
-with pkgs.lib;
+with lib;
 
 let
   engineOption = types.submodule {
