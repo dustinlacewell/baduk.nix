@@ -18,9 +18,9 @@ let
     text = json;
   };
 in activation ''
-  rm -fr "~/.config/Sabaki/settings.json"
-  cp "${path}" "~/.config/Sabaki/settings.json"
-  chown $USER "~/.config/Sabaki/settings.json"
-  chmod 700 "~/.config/Sabaki/settings.json"
+  rm -fr "$HOME/.config/Sabaki/settings.json"
+  cp "${path}" "$HOME/.config/Sabaki/settings.json"
+  chown $USER "$HOME/.config/Sabaki/settings.json"
+  chmod 700 "$HOME/.config/Sabaki/settings.json"
 ''
 
