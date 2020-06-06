@@ -57,7 +57,7 @@ There are a number of declared options but in general you enable what you want:
       config.baduk = {
         sabaki.enable = true;
         katago.enable = true;
-      }
+      };
     }
 #+end_src
 
