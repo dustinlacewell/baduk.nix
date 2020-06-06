@@ -1,0 +1,181 @@
+#+title: baduk.nix
+
+Go/Baduk is the oldest game still played by humans.
+
+Get started learning and playing with =baduk.nix=!
+
+* Overview
+
+=baduk.nix= is a set of Nix modules for home-manager that provide apps and tools
+for playing Go/Baduk.
+
+Some benefits to using =baduk.nix=:
+
+- start playing Go/Baduk right away
+- play/study with AIs
+- declarative configuration for tools
+
+Some features of =baduk.nix=:
+- Sabaki with automatic AI-engine registration
+- AIs supported: GNUGo, Leela-Zero and KataGo
+- Easy to define AI variants with differnt settings
+- Leela-Zero support for multiple board-sizes
+- Jigo support for KataGo (AI tries to lose by smallest margin)
+- Automatic registeration of AI variants with Sabaki
+
+* Installation
+
+Include =baduk.nix= in your home-manager module imports:
+
+#+begin_src nix
+  let
+    baduk = fetchFromGitHub {
+      owner = "dustinlacewell";
+      repo = "baduk.nix";
+      rev = "9c5d79b752e7e9e56f514314eba5a18ce398658c";
+      sha256 = "04yri911rj9j19qqqn6m82266fl05pz98inasni0vxr1cf1gdg00";
+    };
+
+  in {
+    imports = [ baduk ];
+  }
+#+end_src
+
+* Configuration
+
+Configuration is defined through the new options declared by =baduk.nix=.
+
+There are a number of declared options but in general you enable what you want:
+
+#+begin_src nix
+    let
+      baduk = fetchFromGitHub { ... };
+
+    in {
+      imports = [ baduk ];
+
+      config.baduk = {
+        sabaki.enable = true;
+        katago.enable = true;
+      }
+    }
+#+end_src
+
+The various options under =config.baduk.*= have a number of additional options.
+
+Some of the packages interact as well. Activating =config.baduk.katago= will
+automatically register a number of engines with =config.baduk.sabaki.engines= for
+example.
+
+Check the next sections for information on each submodule's options.
+
+* Modules
+
+** Sabaki
+[[https://sabaki.yichuanshen.de/][Sabaki]] is a nice frontend for playing and studying Go/Baduk.
+
+Sabaki supports a *partially* declarative configuration. Currently only
+registered AI engines are supported.
+
+*** Options
+
+**** =baduk.sabaki.enable= (=bool=)
+Install Sabaki. If any engines are defined, render out a configuration file to
+=~/.config/Sabaki/settings.json=
+
+**** =baduk.sabaki.version= (=str=, =0.51.1=)
+Sabaki release to install.
+
+**** =baduk.sabaki.url= (=str=)
+The URL to the Sabaki AppImage.
+
+**** =baduk.sabaki.sha256= (=str=)
+The SHA256 hash of the Sabaki AppImage.
+
+**** =baduk.sabaki.engines= (=list=)
+Each item should be a set with attributes:
+- =name= : The display name of the engine
+- =path= : Path to the engine executable
+- =args= : Extra CLI arguments
+
+Each engine will be rendered into Sabaki's configuration.
+
+Enabling the various AI engines in =baduk.nix= will automatically add them to
+this list.
+
+
+** KataGo
+
+[[https://github.com/lightvector/KataGo][KataGo]] is a powerful AI for Go/Baduk.
+
+KataGo support in =baduk.nix= includes:
+
+- Fully generated declarative configuration
+- Different variants can be defined with different:
+  - Neural networks
+  - Configuration overrides
+  - Jigo support
+
+Jigo refers to when the AI attempts to win by the smallest margin possible,
+rather than the largest. This can help with self-esteem :)
+
+Variants can easily use different models offered by the KataGo team. The
+different models represent different snapshots along the overall training
+progress. By utilizing models earlier in the training process you can get an AI
+that is slightly-less god-like.
+
+The models are described here:
+https://github.com/lightvector/KataGo#current-status-and-history
+
+And the various models are accessible here:
+https://d3dndmfyhecmj0.cloudfront.net/g170/neuralnets/index.html
+
+*** Variant configuration
+There are three sources of configuration for each variant, each which can
+override the next:
+
+- baked defaults ([[https://github.com/dustinlacewell/baduk.nix/blob/master/nix/katago/option-defaults.nix][katago/option-defaults.nix]])
+- =baduk.katago.defaults=
+- =baduk.katago.variants.<variant-name>.config=
+
+*** Options
+
+**** =baduk.katago.enable= (=bool=)
+Install any defined KataGo variants in =baduk.katago.variants=. Each variant is
+also registered as a Sabaki engine in =baduk.sabaki.engines=.
+
+**** =baduk.katago.enable= (=str=)
+default: =https://d3dndmfyhecmj0.cloudfront.net/g170/neuralnets=
+
+Base url used for fetching neural-network models specified in
+=baduk.katago.models=
+
+**** =baduk.katago.models= (=set=)
+A set where each attribute names a defined model. Each value is a set with the
+following attributes:
+
+- =url= : URL part to append to =baduk.katago.releaseUrl= to fetch the model
+- =sha256=: Expected hash of the model file
+
+
+**** =baduk.katago.defaults= (=set=)
+A set of defaults to apply the configuration of every defined variant in
+=baduk.katago.variants=. These defaults will be overriden by any configuration
+defined on specific variants.
+
+The option attributes availble mirror those available for a normal KataGo
+configuration. You can read through the example configuration:
+
+https://github.com/lightvector/KataGo/blob/master/cpp/configs/gtp_example.cfg
+
+**** =baduk.katago.variants= (=set=)
+A set of attributes naming variants of KataGo to install. Each value is a set
+with the following attributes:
+
+- =model= : The name of a model defined in =baduk.katago.models=
+- =config= : Variant specific overrides of =baduk.katago.defaults=
+- =jigo= : The variant should try to win by the smallest margin
+
+Each variant will be installed as =katago-$NAME=.
+
+Each variant will also be registered as an engine for Sabaki.
