@@ -16,9 +16,9 @@ let
     text = json;
   };
 in activation ''
-  rm -fr "/home/ldlework/.config/Sabaki/settings.json"
-  cp "${path}" "/home/ldlework/.config/Sabaki/settings.json"
-  chown ldlework "/home/ldlework/.config/Sabaki/settings.json"
-  chmod 700 "/home/ldlework/.config/Sabaki/settings.json"
+  rm -fr "~/.config/Sabaki/settings.json"
+  cp "${path}" "~/.config/Sabaki/settings.json"
+  chown $USER "~/.config/Sabaki/settings.json"
+  chmod 700 "~/.config/Sabaki/settings.json"
 ''
 
