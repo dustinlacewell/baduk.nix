@@ -1,5 +1,5 @@
 {
   imports = [
-    (import ./nix/sabaki)
+    ./nix/sabaki
   ];
 }
