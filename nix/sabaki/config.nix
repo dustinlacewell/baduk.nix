@@ -1,14 +1,16 @@
-{ pkgs, cfg, lib }:
+{ pkgs, cfg, lib, ... }:
+
+with lib;
 
 let
   dag = import <home-manager/modules/lib/dag.nix> { inherit lib; };
   activation = with dag; txt: dagEntryAfter ["installPackages"] txt;
 
   engineConfigs = {
-    "engines.list" = pkgs.lib.sort (a: b: a.name < b.name) cfg.engines;
+    "engines.list" = sort (a: b: a.name < b.name) cfg.engines;
   };
 
-  defaults = pkgs.lib.importJSON ./settings.json;
+  defaults = importJSON ./settings.json;
   merged = defaults // engineConfigs;
   json = builtins.toJSON merged;
   path = pkgs.writeTextFile {
