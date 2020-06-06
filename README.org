@@ -18,7 +18,7 @@ Some benefits to using =baduk.nix=:
 Some features of =baduk.nix=:
 - Sabaki with automatic AI-engine registration
 - AIs supported: GNUGo, Leela-Zero and KataGo
-- Easy to define AI variants with differnt settings
+- Easy to define AI variants with different settings
 - Leela-Zero support for multiple board-sizes
 - Jigo support for KataGo (AI tries to lose by smallest margin)
 - Automatic registeration of AI variants with Sabaki
@@ -61,7 +61,7 @@ There are a number of declared options but in general you enable what you want:
     }
 #+end_src
 
-The various options under =config.baduk.*= have a number of additional options.
+There are a number of various options under =config.baduk.*=
 
 Some of the packages interact as well. Activating =config.baduk.katago= will
 automatically register a number of engines with =config.baduk.sabaki.engines= for
