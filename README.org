@@ -103,6 +103,14 @@ Each engine will be rendered into Sabaki's configuration.
 Enabling the various AI engines in =baduk.nix= will automatically add them to
 this list.
 
+** GNUGo
+[[https://www.gnu.org/software/gnugo/][GNUGo]] is a classic Go/Baduk playing program.
+
+*** Options
+**** =baduk.gnugo.enable= (=bool=)
+Install GNUGo.
+**** =baduk.gnugo.sabakiLevels= (=list=)
+List of strength-levels to register with Sabaki.
 
 ** KataGo
 
@@ -179,3 +187,36 @@ with the following attributes:
 Each variant will be installed as =katago-$NAME=.
 
 Each variant will also be registered as an engine for Sabaki.
+
+** Leela Zero
+
+[[https://github.com/leela-zero/leela-zero][Leela Zero]] is a fairly faithful reimplementation of the AlphaGo paper by
+Google's DeepMind. It has been fairly obsoleted by KataGo, but the project
+remains active so is included.
+
+LZ is a bit more limited than KataGo. In order to support multiple board-sizes,
+the source is patched for each and recompiled. Further, network models are only
+really available for 19x19. So a Python script is run in order to "resize" the
+official networks for each board size.
+
+*** Options
+
+**** =baduk.leela-zero.enable= (=bool=)
+Install any configured variants in =baduk.leela-zero.variants=.
+
+**** =baduk.leela-zero.models= (=set=)
+A set of attributes naming Leela Zero models to install. Each value is a
+set with the following attributes:
+
+- =url= : Where to fetch the model from
+- =sha256= : Expected hash of the model file
+
+**** =baduk.leela-zero.variants= (=set=)
+A set of attributes naming Leela Zero variants to install and register with
+Sabaki. Each value is a set with the following attributes:
+
+- =model= : Name of a configured model
+- =size= : Board size this variant will support
+- =visits= : Number of visits to consider
+- =playouts= : Number of playouts for each move
+
