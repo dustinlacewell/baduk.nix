@@ -22,7 +22,7 @@ in {
   url = mkOption {
     type = types.str;
     default =
-      "https://github.com/SabakiHQ/Sabaki/releases/download/${cfg.version}/sabaki-v${cfg.version}-linux-x64.AppImage";
+      "https://github.com/SabakiHQ/Sabaki/releases/download/v${cfg.version}/sabaki-v${cfg.version}-linux-x64.AppImage";
   };
 
   sha256 = mkOption {
